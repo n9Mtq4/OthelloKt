@@ -252,3 +252,4 @@ $RECYCLE.BIN/
 *.lnk
 
 .idea
+!gradle/wrapper/gradle-wrapper.jar
