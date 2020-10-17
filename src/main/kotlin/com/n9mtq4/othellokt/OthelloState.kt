@@ -16,7 +16,7 @@ fun readablePlayer(player: Int) = when(player) {
 	else -> "ERROR"
 }
 
-class OthelloState(
+class OthelloState @JvmOverloads constructor(
 	var current: Int = 1,
 	var moveNumber: Int = 0,
 	var board: Array<IntArray> = Array(8) { intArrayOf(0, 0, 0, 0, 0, 0, 0, 0) },
