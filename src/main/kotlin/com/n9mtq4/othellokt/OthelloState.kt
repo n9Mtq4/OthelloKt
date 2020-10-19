@@ -1,5 +1,6 @@
 package com.n9mtq4.othellokt
 
+import clojure.lang.*
 import kotlin.math.sign
 
 /**
@@ -16,11 +17,16 @@ fun readablePlayer(player: Int) = when(player) {
 	else -> "ERROR"
 }
 
+private val currentKw = RT.keyword(null, "current")
+private val moveNumberKw = RT.keyword(null, "move-number")
+private val boardKw = RT.keyword(null, "board")
+
 class OthelloState @JvmOverloads constructor(
 	var current: Int = 1,
 	var moveNumber: Int = 0,
 	var board: Array<IntArray> = Array(8) { intArrayOf(0, 0, 0, 0, 0, 0, 0, 0) },
-	generateInitial: Boolean = true) {
+	generateInitial: Boolean = true
+) : IPersistentMap, ILookup, IKeywordLookup, IObj {
 	
 	init {
 		if (generateInitial) {
@@ -167,7 +173,91 @@ class OthelloState @JvmOverloads constructor(
 		if (other !is OthelloState) return false
 		
 		return board.contentDeepEquals(other.board)
-		
+	}
+	
+	fun pgetnull(key: Any?): Object? {
+		if (key !is Keyword) return null
+		return when(key) {
+			currentKw -> current as Object
+			moveNumberKw -> moveNumber as Object
+			boardKw -> board as Object
+			else -> return null
+		}
+	}
+	
+	fun pgetthrow(key: Any?): Object? {
+		return pgetnull(key) ?: throw NoSuchElementException("No key $key in OthelloState")
+	}
+	
+	override fun meta(): IPersistentMap? {
+		return null
+	}
+	
+	override fun withMeta(meta: IPersistentMap?): IObj {
+		throw UnsupportedOperationException()
+	}
+	
+	override fun getLookupThunk(k: Keyword): ILookupThunk {
+		return OLookupThunk(k, pgetnull(k))
+	}
+	
+	override fun seq(): ISeq {
+		return ArraySeq.create(
+			MapEntry.create(currentKw, current),
+			MapEntry.create(moveNumberKw, moveNumber),
+			MapEntry.create(boardKw, board)
+		)
+	}
+	
+	override fun count(): Int = 3
+	
+	override fun cons(o: Any?): IPersistentCollection {
+		throw UnsupportedOperationException()
+	}
+	
+	override fun empty(): IPersistentCollection {
+		throw UnsupportedOperationException()
+	}
+	
+	override fun equiv(o: Any?): Boolean {
+		return equals(o)
+	}
+	
+	override fun valAt(key: Any?): Any? {
+		return pgetnull(key)
+	}
+	
+	override fun valAt(key: Any?, notFound: Any?): Any? {
+		return pgetnull(key) ?: notFound
+	}
+	
+	override fun containsKey(key: Any?): Boolean {
+		if (key !is Keyword) return false
+		return (key == currentKw) || (key == moveNumberKw) || (key == boardKw)
+	}
+	
+	override fun iterator(): MutableIterator<Any?> {
+		return mutableListOf(
+			MapEntry.create(currentKw, current),
+			MapEntry.create(moveNumberKw, moveNumber),
+			MapEntry.create(boardKw, board)
+		).iterator()
+	}
+	
+	override fun entryAt(key: Any?): IMapEntry {
+		return MapEntry(key, pgetthrow(key))
+	}
+	
+	override fun assoc(key: Any?, `val`: Any?): IPersistentMap {
+		throw UnsupportedOperationException()
+	}
+	
+	override fun assocEx(key: Any?, `val`: Any?): IPersistentMap {
+		throw UnsupportedOperationException()
+	}
+	
+	override fun without(key: Any?): IPersistentMap {
+		throw UnsupportedOperationException()
 	}
 	
 }
