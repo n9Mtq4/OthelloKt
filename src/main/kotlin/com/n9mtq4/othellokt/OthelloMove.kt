@@ -14,7 +14,7 @@ private val playerKw = RT.keyword(null, "player")
 
 data class OthelloMove(
 	val r: Int, val c: Int, val player: Int
-) : IPersistentMap, ILookup, IKeywordLookup, IObj {
+) : IRecord, IPersistentMap, ILookup, IKeywordLookup, IObj {
 	
 	fun humanString(): String {
 		return "${readablePlayer(player)} placing at ($r, $c)"
@@ -24,17 +24,17 @@ data class OthelloMove(
 		return "($r, $c)"
 	}
 	
-	fun pgetnull(key: Any?): Object? {
+	fun pgetnull(key: Any?): Any? {
 		if (key !is Keyword) return null
 		return when(key) {
-			rowKw -> r as Object
-			colKw -> c as Object
-			playerKw -> player as Object
+			rowKw -> r
+			colKw -> c
+			playerKw -> player
 			else -> return null
 		}
 	}
 	
-	fun pgetthrow(key: Any?): Object? {
+	fun pgetthrow(key: Any?): Any? {
 		return pgetnull(key) ?: throw NoSuchElementException("No key $key in OthelloState")
 	}
 	

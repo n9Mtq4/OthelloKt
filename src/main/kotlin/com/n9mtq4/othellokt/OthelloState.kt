@@ -26,7 +26,7 @@ class OthelloState @JvmOverloads constructor(
 	var moveNumber: Int = 0,
 	var board: Array<IntArray> = Array(8) { intArrayOf(0, 0, 0, 0, 0, 0, 0, 0) },
 	generateInitial: Boolean = true
-) : IPersistentMap, ILookup, IKeywordLookup, IObj {
+) : IRecord, IPersistentMap, ILookup, IKeywordLookup, IObj {
 	
 	init {
 		if (generateInitial) {
@@ -175,17 +175,17 @@ class OthelloState @JvmOverloads constructor(
 		return board.contentDeepEquals(other.board)
 	}
 	
-	fun pgetnull(key: Any?): Object? {
+	fun pgetnull(key: Any?): Any? {
 		if (key !is Keyword) return null
 		return when(key) {
-			currentKw -> current as Object
-			moveNumberKw -> moveNumber as Object
-			boardKw -> board as Object
+			currentKw -> current
+			moveNumberKw -> moveNumber
+			boardKw -> board
 			else -> return null
 		}
 	}
 	
-	fun pgetthrow(key: Any?): Object? {
+	fun pgetthrow(key: Any?): Any? {
 		return pgetnull(key) ?: throw NoSuchElementException("No key $key in OthelloState")
 	}
 	
