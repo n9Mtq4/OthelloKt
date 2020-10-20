@@ -46,11 +46,6 @@ class OthelloState @JvmOverloads constructor(
 		return evaluation().sign
 	}
 	
-	fun copy(): OthelloState {
-		val newBoard = Array(8) { board[it].copyOf() }
-		return OthelloState(current, moveNumber, newBoard, false)
-	}
-	
 	fun applyMove(move: OthelloMove): OthelloState {
 		
 		val newState = copy()
@@ -81,13 +76,6 @@ class OthelloState @JvmOverloads constructor(
 		newState.moveNumber++
 		return newState
 		
-	}
-	
-	tailrec fun flip(r: Int, c: Int, dr: Int, dc: Int, color: Int) {
-		if (r < 0 || c < 0 || r >= 8 || c >= 8 || board[r][c] != color)
-			return
-		board[r][c] *= -1
-		flip(r + dr, c + dc, dr, dc, color)
 	}
 	
 	private fun hasMove(): Boolean {
@@ -152,20 +140,41 @@ class OthelloState @JvmOverloads constructor(
 	}
 	
 	fun evaluation(): Int {
-		return board.sumBy { it.sum() }
+		// return board.sumBy { it.sum() } // about 20% slower
+		var sum = 0
+		for (r in 0 until 8) {
+			for (c in 0 until 8) {
+				sum += board[r][c]
+			}
+		}
+		return sum
 	}
 	
 	fun count(color: Int): Int {
-		return board.map { row -> row.count { it == color } }.sum()
+		// return board.map { row -> row.count { it == color } }.sum() // about 20% slower
+		var sum = 0
+		for (r in 0 until 8) {
+			for (c in 0 until 8) {
+				if (board[r][c] == color) sum++
+			}
+		}
+		return sum
 	}
 	
-	fun flanking(r: Int, c: Int, dr: Int, dc: Int, rowColor: Int, endColor: Int): Boolean {
+	private tailrec fun flip(r: Int, c: Int, dr: Int, dc: Int, color: Int) {
+		if (r < 0 || c < 0 || r >= 8 || c >= 8 || board[r][c] != color)
+			return
+		board[r][c] *= -1
+		flip(r + dr, c + dc, dr, dc, color)
+	}
+	
+	private fun flanking(r: Int, c: Int, dr: Int, dc: Int, rowColor: Int, endColor: Int): Boolean {
 		return r >= 0 && c >= 0 && r < 8 && c < 8 &&
 				board[r][c] == rowColor &&
 				flankingHelp(r + dr, c + dc, dr, dc, rowColor, endColor)
 	}
 	
-	tailrec fun flankingHelp(r: Int, c: Int, dr: Int, dc: Int, rowColor: Int, endColor: Int): Boolean {
+	private tailrec fun flankingHelp(r: Int, c: Int, dr: Int, dc: Int, rowColor: Int, endColor: Int): Boolean {
 		if (r < 0 || r >= 8 || c < 0 || c >= 8 || board[r][c] == 0)
 			return false
 		if (board[r][c] == endColor)
@@ -179,8 +188,7 @@ class OthelloState @JvmOverloads constructor(
 		for (r in 0 until 8) {
 			result += "$r |"
 			for (c in 0 until 8) {
-				val player = board[r][c]
-				val rep = when (player) {
+				val rep = when (board[r][c]) {
 					0 -> " "
 					1 -> "X"
 					-1 -> "O"
@@ -195,6 +203,11 @@ class OthelloState @JvmOverloads constructor(
 		result += "current player: ${readablePlayer(current)}\n"
 		result += "black (X): ${count(1)}\nwhite (O): ${count(-1)}"
 		return result
+	}
+	
+	fun copy(): OthelloState {
+		val newBoard = Array(8) { board[it].copyOf() }
+		return OthelloState(current, moveNumber, newBoard, false)
 	}
 	
 	override fun equals(other: Any?): Boolean {
