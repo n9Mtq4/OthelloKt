@@ -38,7 +38,7 @@ class OthelloState @JvmOverloads constructor(
 	}
 	
 	fun gameOver(): Boolean {
-		return availableMoves().isEmpty()
+		return !hasMove()
 	}
 	
 	fun winner(): Int {
@@ -74,7 +74,7 @@ class OthelloState @JvmOverloads constructor(
 		newState.current = -current
 		
 		// if no legal moves, switch back to other player
-		if (newState.availableMoves().isEmpty()) {
+		if (!newState.hasMove()) {
 			newState.current = move.player
 		}
 		
@@ -88,6 +88,35 @@ class OthelloState @JvmOverloads constructor(
 			return
 		board[r][c] *= -1
 		flip(r + dr, c + dc, dr, dc, color)
+	}
+	
+	private fun hasMove(): Boolean {
+		
+		for (r in 0 until 8) {
+			for (c in 0 until 8) {
+				
+				// can only play in empty square
+				if (board[r][c] != 0)
+					continue
+				
+				for (dr in DIRECTIONS) {
+					for (dc in DIRECTIONS) {
+						
+						if (dr == 0 && dc == 0)
+							continue
+						
+						if (flanking(r + dr, c + dc, dr, dc, -current, current)) {
+							return true
+						}
+						
+					}
+				}
+				
+			}
+		}
+		
+		return false
+		
 	}
 	
 	fun availableMoves(): List<OthelloMove> {
