@@ -14,7 +14,7 @@ private val playerKw = RT.keyword(null, "player")
 
 data class OthelloMove(
 	val r: Int, val c: Int, val player: Int
-) : IRecord, IPersistentMap, ILookup, IKeywordLookup, IObj {
+) : IRecord, IPersistentMap, ILookup, IObj {
 	
 	fun humanString(): String {
 		return "${readablePlayer(player)} placing at ($r, $c)"
@@ -44,10 +44,6 @@ data class OthelloMove(
 	
 	override fun withMeta(meta: IPersistentMap?): IObj {
 		throw UnsupportedOperationException()
-	}
-	
-	override fun getLookupThunk(k: Keyword): ILookupThunk {
-		return OLookupThunk(k, pgetnull(k))
 	}
 	
 	override fun seq(): ISeq {

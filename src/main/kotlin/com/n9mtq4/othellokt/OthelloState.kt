@@ -26,7 +26,7 @@ class OthelloState @JvmOverloads constructor(
 	var moveNumber: Int = 0,
 	var board: Array<IntArray> = Array(8) { intArrayOf(0, 0, 0, 0, 0, 0, 0, 0) },
 	generateInitial: Boolean = true
-) : IRecord, IPersistentMap, ILookup, IKeywordLookup, IObj {
+) : IRecord, IPersistentMap, ILookup, IObj {
 	
 	init {
 		if (generateInitial) {
@@ -195,10 +195,6 @@ class OthelloState @JvmOverloads constructor(
 	
 	override fun withMeta(meta: IPersistentMap?): IObj {
 		throw UnsupportedOperationException()
-	}
-	
-	override fun getLookupThunk(k: Keyword): ILookupThunk {
-		return OLookupThunk(k, pgetnull(k))
 	}
 	
 	override fun seq(): ISeq {
