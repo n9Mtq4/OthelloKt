@@ -37,7 +37,7 @@ fun humanHeuristic(state: OthelloState): Double {
 		}
 	}
 	val possibleMoves = state.current * state.availableMoves().size
-	return BOARD_SCORE_WEIGHT * boardSum + MOVE_SCORE_WEIGHT * possibleMoves.toDouble()
+	return BOARD_SCORE_WEIGHT * boardSum + MOVE_SCORE_WEIGHT * possibleMoves
 }
 
 @JvmOverloads
@@ -46,8 +46,8 @@ fun alphaBetaKtCljFunc(
 	state: OthelloState,
 	depth: Int,
 	playMax: Boolean,
-	alpha: Double = Double.MIN_VALUE,
-	beta: Double = Double.MAX_VALUE
+	alpha: Double = Double.NEGATIVE_INFINITY,
+	beta: Double = Double.POSITIVE_INFINITY
 ): Double {
 	
 	if (depth <= 0 || state.gameOver())
