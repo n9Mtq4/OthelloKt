@@ -36,44 +36,6 @@ fun humanHeuristic(state: OthelloState): Double {
 }
 
 @JvmOverloads
-fun alphaBetaHandCraftedKt(
-	state: OthelloState,
-	depth: Int,
-	playMax: Boolean,
-	alpha: Double = Double.MIN_VALUE,
-	beta: Double = Double.MAX_VALUE
-): Double {
-	
-	if (depth <= 0 || state.gameOver())
-		return humanHeuristic(state)
-	
-	var a = alpha
-	var b = beta
-	
-	if (playMax) {
-		var value = Double.MIN_VALUE
-		for (move in state.availableMoves()) {
-			val child = state.applyMove(move)
-			value = max(value, alphaBetaHandCraftedKt(child, depth - 1, !playMax, a, b))
-			a = max(value, a)
-			if (a >= b) return value
-		}
-		return value
-	} else {
-		var value = Double.MAX_VALUE
-		for (move in state.availableMoves()) {
-			val child = state.applyMove(move)
-			value = min(value, alphaBetaHandCraftedKt(child, depth - 1, !playMax, a, b))
-			b = min(value, b)
-			if (a >= b) return value
-		}
-		return value
-	}
-	
-}
-
-
-@JvmOverloads
 fun alphaBetaKtCljFunc(
 	heuristic: IFn,
 	state: OthelloState,
