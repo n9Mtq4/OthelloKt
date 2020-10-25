@@ -97,7 +97,7 @@ fun alphaBetaKtCljFunc(
 			val child = state.applyMove(move)
 			
 			// recursively evaluation position & update alpha
-			value = max(value, alphaBetaKtCljFunc(heuristic, child, depth - 1, !playMax, a, beta))
+			value = max(value, alphaBetaKtCljFunc(heuristic, child, depth - 1, false, a, beta))
 			a = max(value, a)
 			
 			// prune if possible
@@ -117,7 +117,7 @@ fun alphaBetaKtCljFunc(
 			val child = state.applyMove(move)
 			
 			// recursively evaluation position & update beta
-			value = min(value, alphaBetaKtCljFunc(heuristic, child, depth - 1, !playMax, alpha, b))
+			value = min(value, alphaBetaKtCljFunc(heuristic, child, depth - 1, true, alpha, b))
 			b = min(value, b)
 			
 			// prune if possible

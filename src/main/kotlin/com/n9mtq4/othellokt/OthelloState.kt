@@ -12,7 +12,7 @@ import kotlin.math.sign
 /**
  * A list of directions that a ray can go in
  * */
-private val DIRECTIONS = arrayOf(-1, 0, 1)
+val DIRECTIONS = arrayOf(-1, 0, 1)
 
 /**
  * Converts a player integer to a string
