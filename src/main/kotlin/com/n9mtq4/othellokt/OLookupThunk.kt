@@ -7,7 +7,9 @@ import clojure.lang.Keyword
 
 /**
  * Created by will on 10/18/20 at 11:14 PM.
- *
+ * 
+ * Returns a clojure thunk for implementing IKeywordLookup
+ * 
  * @author Will "n9Mtq4" Bresnahan
  */
 class OLookupThunk(private val key: Keyword?, private val elem: Any?) : ILookupThunk, IObj {

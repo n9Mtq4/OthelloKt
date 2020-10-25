@@ -12,14 +12,35 @@ private val rowKw = RT.keyword(null, "row")
 private val colKw = RT.keyword(null, "col")
 private val playerKw = RT.keyword(null, "player")
 
+/**
+ * An Othello Move
+ * 
+ * @param r the row
+ * @param c the column
+ * @param player the player making the move
+ * */
 data class OthelloMove(
-	val r: Int, val c: Int, val player: Int
+	val r: Int,
+	val c: Int,
+	val player: Int
 ) : IRecord, IPersistentMap, ILookup, IObj {
 	
+	/**
+	 * Converts to a human readable string
+	 * "white placing at (3, 5)"
+	 * 
+	 * @return the human readable string
+	 * */
 	fun humanString(): String {
 		return "${readablePlayer(player)} placing at ($r, $c)"
 	}
 	
+	/**
+	 * Converts to a tuple notation of (r, c)
+	 * "(3, 5)"
+	 * 
+	 * @return a string of (row, col)
+	 * */
 	override fun toString(): String {
 		return "($r, $c)"
 	}
