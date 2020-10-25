@@ -12,7 +12,7 @@ import kotlin.math.sign
 /**
  * A list of directions that a ray can go in
  * */
-val DIRECTIONS = arrayOf(-1, 0, 1)
+val DIRECTIONS = intArrayOf(-1, 0, 1)
 
 /**
  * Converts a player integer to a string
@@ -71,7 +71,7 @@ class OthelloState @JvmOverloads constructor(
 	 * @return the player that won (-1, 0, 1)
 	 * */
 	fun winner(): Int {
-		assert(gameOver())
+//		assert(gameOver())
 		return evaluation().sign
 	}
 	
@@ -86,8 +86,8 @@ class OthelloState @JvmOverloads constructor(
 		
 		val newState = copy()
 		val (r, c) = move
-		assert(r >= 0 && c >= 0 && r < 8 && c < 8 && move.player == current)
-		assert(board[r][c] == 0)
+//		assert(r >= 0 && c >= 0 && r < 8 && c < 8 && move.player == current)
+//		assert(board[r][c] == 0)
 		
 		// try every direction
 		for (dr in DIRECTIONS) {
