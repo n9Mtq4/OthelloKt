@@ -45,7 +45,7 @@ data class OthelloMove(
 		return "($r, $c)"
 	}
 	
-	fun pgetnull(key: Any?): Any? {
+	private fun pgetnull(key: Any?): Any? {
 		if (key !is Keyword) return null
 		return when(key) {
 			rowKw -> r
@@ -55,7 +55,7 @@ data class OthelloMove(
 		}
 	}
 	
-	fun pgetthrow(key: Any?): Any? {
+	private fun pgetthrow(key: Any?): Any? {
 		return pgetnull(key) ?: throw NoSuchElementException("No key $key in OthelloState")
 	}
 	

@@ -309,7 +309,7 @@ class OthelloState @JvmOverloads constructor(
 		return result
 	}
 	
-	fun pgetnull(key: Any?): Any? {
+	private fun pgetnull(key: Any?): Any? {
 		if (key !is Keyword) return null
 		return when(key) {
 			currentKw -> current
@@ -319,7 +319,7 @@ class OthelloState @JvmOverloads constructor(
 		}
 	}
 	
-	fun pgetthrow(key: Any?): Any? {
+	private fun pgetthrow(key: Any?): Any? {
 		return pgetnull(key) ?: throw NoSuchElementException("No key $key in OthelloState")
 	}
 	
