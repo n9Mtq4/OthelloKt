@@ -34,14 +34,14 @@ private val GRID_WEIGHTS_COEFFS = intArrayOf(1, 2, 2, 2, 1, 2, 2, 1, 2, 1)
 /**
  * Computes the dot product of two arrays
  * 
- * @param arr1 array 1
- * @param arr2 array 2
- * @return arr1 * arr2
+ * @receiver the first array
+ * @param other the second array
+ * @return the dot product of the receiver and the other array
  * */
-private fun dotp(arr1: IntArray, arr2: IntArray): Int {
+private infix fun IntArray.dotp(other: IntArray): Int {
 	var sum = 0
-	for (i in arr1.indices) {
-		sum += arr1[i] * arr2[i]
+	for (i in this.indices) {
+		sum += this[i] * other[i]
 	}
 	return sum
 }
@@ -62,5 +62,5 @@ fun applyHeuristicWeights(state: OthelloState, weights: IntArray): Double {
 		}
 	}
 	
-	return boardSum.toDouble() / (4 * dotp(GRID_WEIGHTS_COEFFS, weights)).toDouble()
+	return boardSum.toDouble() / (4 * (GRID_WEIGHTS_COEFFS dotp weights)).toDouble()
 }
