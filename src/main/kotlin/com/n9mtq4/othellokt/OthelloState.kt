@@ -20,7 +20,7 @@ private val DIRECTIONS = arrayOf(-1, 0, 1)
  * @param player the player (-1, 0, 1)
  * @return the string name of the player (white, draw, black)
  * */
-fun readablePlayer(player: Int) = when(player) {
+internal fun readablePlayer(player: Int) = when(player) {
 	-1 -> "white"
 	0 -> "draw"
 	1 -> "black"

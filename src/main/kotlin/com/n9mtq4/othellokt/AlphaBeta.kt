@@ -13,15 +13,15 @@ import kotlin.math.min
 /**
  * A list of handcrafted grid weights to evaluate an Othello board
  * */
-val GRID_WEIGHTS = arrayOf(
-	intArrayOf(120, -20, 20, 5, 5, 20, -20, 120),
-	intArrayOf(-20, -40, -5, -5, -5, -5, -40, -20),
-	intArrayOf(20, -5, 15, 3, 3, 15, -5, 20),
-	intArrayOf(5, -5, 3, 3, 3, 3, -5, 5),
-	intArrayOf(5, -5, 3, 3, 3, 3, -5, 5),
-	intArrayOf(20, -5, 15, 3, 3, 15, -5, 20),
-	intArrayOf(-20, -40, -5, -5, -5, -5, -40, -20),
-	intArrayOf(120, -20, 20, 5, 5, 20, -20, 120)
+private val GRID_WEIGHTS = arrayOf(
+	intArrayOf(120, -20, 20,  5,   5,   20,  -20, 120),
+	intArrayOf(-20, -40, -5,  -5,  -5,  -5,  -40, -20),
+	intArrayOf(20,  -5,  15,  3,   3,   15,  -5,  20),
+	intArrayOf(5,   -5,  3,   3,   3,   3,   -5,  5),
+	intArrayOf(5,   -5,  3,   3,   3,   3,   -5,  5),
+	intArrayOf(20,  -5,  15,  3,   3,   15,  -5,  20),
+	intArrayOf(-20, -40, -5,  -5,  -5,  -5,  -40, -20),
+	intArrayOf(120, -20, 20,  5,   5,   20,  -20, 120)
 )
 
 //val GRID_WEIGHTS_SUM = GRID_WEIGHTS.sumBy { it.sum() }
