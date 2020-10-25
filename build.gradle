@@ -1,16 +1,20 @@
 plugins {
     id 'org.jetbrains.kotlin.jvm' version '1.4.10'
+    id 'org.jetbrains.dokka' version '1.4.10.2'
 }
 group = 'com.n9mtq4.othellokt'
 version = '1.0-SNAPSHOT'
 
 repositories {
     mavenCentral()
+    jcenter()
 }
+
 dependencies {
     testImplementation 'org.jetbrains.kotlin:kotlin-test-junit5'
     compile group: 'org.clojure', name: 'clojure', version: '1.10.1'
 }
+
 compileKotlin {
     kotlinOptions.jvmTarget = '1.8'
 }
