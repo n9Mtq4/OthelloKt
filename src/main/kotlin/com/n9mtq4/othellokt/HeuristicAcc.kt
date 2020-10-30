@@ -25,11 +25,9 @@ private val GRID_SYMMETRY = arrayOf(
 
 /**
  * Counts how many times each square index is encountered in
- * [GRID_SYMMETRY] / 4.
- * 
- * Note: a constant 4 has been factored out.
+ * [GRID_SYMMETRY].
  * */
-private val GRID_WEIGHTS_COEFFS = intArrayOf(1, 2, 2, 2, 1, 2, 2, 1, 2, 1)
+private val GRID_WEIGHTS_COEFFS = intArrayOf(4, 8, 8, 8, 4, 8, 8, 4, 8, 4)
 
 /**
  * Computes the dot product of two arrays
@@ -62,5 +60,5 @@ fun applyHeuristicWeights(state: OthelloState, weights: IntArray): Double {
 		}
 	}
 	
-	return boardSum.toDouble() / (4 * (GRID_WEIGHTS_COEFFS dotp weights)).toDouble()
+	return boardSum.toDouble() / (GRID_WEIGHTS_COEFFS dotp weights).toDouble()
 }

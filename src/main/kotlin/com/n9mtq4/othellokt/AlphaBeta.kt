@@ -48,19 +48,22 @@ private const val MOVE_SCORE_WEIGHT = 0.4 / 10.0
  * A handcrafted othello heuristic
  * 
  * @param state the [OthelloState]
- * @return a double of the board evaluation. Positive is good for the current player
+ * @return a double of the board evaluation. Positive is good for player 1 (black)
  * */
 fun humanHeuristic(state: OthelloState): Double {
+	
 	if (state.gameOver())
 		return 1000000.0 * state.winner()
+	
 	var boardSum = 0.0
 	for (r in 0 until 8) {
 		for (c in 0 until 8) {
 			boardSum += state.board[r][c] * GRID_WEIGHTS[r][c]
 		}
 	}
-	val possibleMoves = state.current * state.availableMoves().size
-	return BOARD_SCORE_WEIGHT * boardSum + MOVE_SCORE_WEIGHT * possibleMoves
+	
+	return BOARD_SCORE_WEIGHT * boardSum + MOVE_SCORE_WEIGHT * state.current * state.availableMoves().size
+	
 }
 
 /**
