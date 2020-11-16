@@ -16,7 +16,7 @@ import clojure.lang.IFn
  * @param depth the depth to run alpha beta
  * @return the best move determined by alpha beta using [heuristic]
  * */
-fun mtdBestMove(heuristic: IFn, state: OthelloState, depth: Int): OthelloMove {
+fun mtdBestMove(heuristic: IFn, state: OthelloState, depth: Int, f: Double = 0.0): Pair<Double, OthelloMove> {
 	
 	// set up moves and player
 	val availableMoves = state.availableMoves()
@@ -28,7 +28,7 @@ fun mtdBestMove(heuristic: IFn, state: OthelloState, depth: Int): OthelloMove {
 	
 	for (move in availableMoves) {
 		
-		val score = state.current * mtdf(heuristic, state.applyMove(move), depth - 1, !rev)
+		val score = state.current * mtdf(heuristic, state.applyMove(move), depth - 1, !rev, f)
 		
 		if (score > bestMoveScore) {
 			bestMoveScore = score
@@ -37,7 +37,7 @@ fun mtdBestMove(heuristic: IFn, state: OthelloState, depth: Int): OthelloMove {
 		
 	}
 	
-	return bestMove
+	return bestMoveScore to bestMove
 	
 }
 
@@ -54,11 +54,21 @@ fun mtdPlayGame(black: IFn, white: IFn, depth: Int): Int {
 	
 	var board = OthelloState()
 	
+	// store previous board evaluations to improve the speed of the next evaluation
+	var blackGuess = 0.0
+	var whiteGuess = 0.0
+	
 	while (!board.gameOver()) {
 		
-		val player = if (board.current == 1) black else white
-		
-		board = board.applyMove(mtdBestMove(player, board, depth))
+		if (board.current == 1) {
+			val (f, move) = mtdBestMove(black, board, depth, blackGuess)
+			blackGuess = f
+			board = board.applyMove(move)
+		} else {
+			val (f, move) = mtdBestMove(white, board, depth, whiteGuess)
+			whiteGuess = f
+			board = board.applyMove(move)
+		}
 		
 	}
 	

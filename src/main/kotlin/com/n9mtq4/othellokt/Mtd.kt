@@ -45,12 +45,12 @@ fun alphaBetaKtWithMemoryFljFunc(
 	state: OthelloState,
 	depth: Int,
 	playMax: Boolean,
-	alpha: Double,
-	beta: Double
+	_alpha: Double,
+	_beta: Double
 ): Double {
 	
-	var alpham = alpha
-	var betam = beta
+	var alpha = _alpha
+	var beta = _beta
 	var g: Double
 	
 	// lookup
@@ -62,11 +62,11 @@ fun alphaBetaKtWithMemoryFljFunc(
 		
 		nlower = lookup.first
 		nupper = lookup.second
-		if (nlower >= betam) return nlower
-		if (nupper <= alpham) return nupper
+		if (nlower >= beta) return nlower
+		if (nupper <= alpha) return nupper
 		
-		alpham = max(alpham, nlower)
-		betam = min(betam, nupper)
+		alpha = max(alpha, nlower)
+		beta = min(beta, nupper)
 		
 	}
 	
@@ -78,14 +78,14 @@ fun alphaBetaKtWithMemoryFljFunc(
 	} else if (playMax) {
 		
 		g = Double.NEGATIVE_INFINITY
-		var a = alpham
+		var a = alpha
 		
 		for (move in state.availableMoves()) {
 			
 			val child = state.applyMove(move)
 			
 			// recursively evaluation position & update alpha
-			g = max(g, alphaBetaKtWithMemoryFljFunc(table, heuristic, child, depth - 1, false, a, betam))
+			g = max(g, alphaBetaKtWithMemoryFljFunc(table, heuristic, child, depth - 1, !playMax, a, beta))
 			a = max(a, g)
 			
 			// prune if possible
@@ -96,33 +96,33 @@ fun alphaBetaKtWithMemoryFljFunc(
 	} else {
 		
 		g = Double.POSITIVE_INFINITY
-		var b = betam
+		var b = beta
 		
 		for (move in state.availableMoves()) {
 			
 			val child = state.applyMove(move)
 			
 			// recursively evaluation position & update beta
-			g = min(g, alphaBetaKtWithMemoryFljFunc(table, heuristic, child, depth - 1, true, alpham, b))
+			g = min(g, alphaBetaKtWithMemoryFljFunc(table, heuristic, child, depth - 1, !playMax, alpha, b))
 			b = min(b, g)
 			
 			// prune if possible
-			if (g >= alpham) break
+			if (g <= alpha) break
 			
 		}
 		
 	}
 	
-	if (g <= alpham) {
+	if (g <= alpha) {
 		nupper = g
 	}
 	
-	if (g > alpham && g < beta) {
+	if (g > alpha && g < beta) {
 		nlower = g
 		nupper = g
 	}
 	
-	if (g >= betam) {
+	if (g >= beta) {
 		nlower = g
 	}
 	
