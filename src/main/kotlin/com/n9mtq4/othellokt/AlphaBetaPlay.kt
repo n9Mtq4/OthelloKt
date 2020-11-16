@@ -20,25 +20,9 @@ import clojure.lang.IFn
 fun abBestMove(heuristic: IFn, state: OthelloState, depth: Int): OthelloMove {
 	
 	// set up moves and player
-	val availableMoves = state.availableMoves()
-	val rev = state.current == 1
+	val playMax = state.current == 1
 	
-	// find the best move
-	var bestMove = availableMoves[0]
-	var bestMoveScore = Double.NEGATIVE_INFINITY
-	
-	for (move in availableMoves) {
-		
-		val score = state.current * alphaBetaKtCljFunc(heuristic, state.applyMove(move), depth - 1, !rev)
-		
-		if (score > bestMoveScore) {
-			bestMoveScore = score
-			bestMove = move
-		}
-		
-	}
-	
-	return bestMove
+	return alphaBetaRootKtCljFunc(heuristic, state, depth, playMax)
 	
 }
 

@@ -67,6 +67,81 @@ fun humanHeuristic(state: OthelloState): Double {
 }
 
 /**
+ * An implementation of minimax with alpha beta pruning for the root node.
+ *
+ * @param heuristic A clojure function that returns a double
+ * @param state the [OthelloState]
+ * @param depth the depth of the search
+ * @param playMax Should we try to maximize the score?
+ * @param alpha the alpha pruning parameter
+ * @param beta the beta pruning parameter
+ * */
+@JvmOverloads
+fun alphaBetaRootKtCljFunc(
+	heuristic: IFn,
+	state: OthelloState,
+	depth: Int,
+	playMax: Boolean,
+	alpha: Double = Double.NEGATIVE_INFINITY,
+	beta: Double = Double.POSITIVE_INFINITY
+): OthelloMove {
+	
+	val moves = state.availableMoves()
+	var bestMove = moves[0]
+	
+	if (playMax) {
+		
+		var value = Double.NEGATIVE_INFINITY
+		var a = alpha
+		
+		for (move in moves) {
+			
+			val child = state.applyMove(move)
+			
+			// recursively evaluation position & update alpha
+			val result = alphaBetaKtCljFunc(heuristic, child, depth - 1, false, a, beta)
+			if (result > value) {
+				value = result
+				bestMove = move
+			}
+			a = max(value, a)
+			
+			// prune if possible
+			if (a >= beta) break
+			
+		}
+		
+		return bestMove
+		
+	} else {
+		
+		var value = Double.POSITIVE_INFINITY
+		var b = beta
+		
+		for (move in moves) {
+			
+			val child = state.applyMove(move)
+			
+			// recursively evaluation position & update beta
+			val result = alphaBetaKtCljFunc(heuristic, child, depth - 1, true, alpha, b)
+			if (result < value) {
+				value = result
+				bestMove = move
+			}
+			b = min(value, b)
+			
+			// prune if possible
+			if (alpha >= b) break
+			
+		}
+		
+		return bestMove
+		
+	}
+	
+}
+
+/**
  * An implementation of minimax with alpha beta pruning.
  * 
  * @param heuristic A clojure function that returns a double
