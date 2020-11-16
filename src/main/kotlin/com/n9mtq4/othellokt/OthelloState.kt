@@ -85,7 +85,7 @@ class OthelloState @JvmOverloads constructor(
 	fun applyMove(move: OthelloMove): OthelloState {
 		
 		val newState = copy()
-		val (r, c) = move
+		val (r, c, _) = move
 //		assert(r >= 0 && c >= 0 && r < 8 && c < 8 && move.player == current)
 //		assert(board[r][c] == 0)
 		
