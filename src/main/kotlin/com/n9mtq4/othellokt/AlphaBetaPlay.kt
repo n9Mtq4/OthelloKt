@@ -28,22 +28,26 @@ fun abBestMove(heuristic: IFn, state: OthelloState, depth: Int): OthelloMove {
 
 /**
  * Plays a game of Othello against two clojure heuristics. Uses
- * alpha beta with a depth of [depth]
+ * alpha beta with a depth of [blackDepth] for the black player
+ * and a depth of [whiteDepth] for the white player.
  *
  * @param black the black clojure heuristic
  * @param white the white clojure heuristic
- * @param depth the alpha beta depth
+ * @param blackDepth the alpha beta depth for black
+ * @param whiteDepth the alpha beta depth for white
  * @return the winner of the game
  * */
-fun abPlayGame(black: IFn, white: IFn, depth: Int): Int {
+fun abPlayGame(black: IFn, white: IFn, blackDepth: Int, whiteDepth: Int): Int {
 	
 	var board = OthelloState()
 	
 	while (!board.gameOver()) {
 		
-		val player = if (board.current == 1) black else white
-		
-		board = board.applyMove(abBestMove(player, board, depth))
+		board = if (board.current == 1) {
+			board.applyMove(abBestMove(black, board, blackDepth))
+		} else {
+			board.applyMove(abBestMove(white, board, whiteDepth))
+		}
 		
 	}
 	
