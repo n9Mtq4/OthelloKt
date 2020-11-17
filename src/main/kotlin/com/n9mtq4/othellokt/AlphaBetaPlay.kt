@@ -35,9 +35,9 @@ fun abBestMove(heuristic: IFn, state: OthelloState, depth: Int): OthelloMove {
  * @param white the white clojure heuristic
  * @param blackDepth the alpha beta depth for black
  * @param whiteDepth the alpha beta depth for white
- * @return the winner of the game
+ * @return the final board position
  * */
-fun abPlayGame(black: IFn, white: IFn, blackDepth: Int, whiteDepth: Int): Int {
+fun abPlayGame(black: IFn, white: IFn, blackDepth: Int, whiteDepth: Int): OthelloState {
 	
 	var board = OthelloState()
 	
@@ -51,6 +51,6 @@ fun abPlayGame(black: IFn, white: IFn, blackDepth: Int, whiteDepth: Int): Int {
 		
 	}
 	
-	return board.winner()
+	return board
 	
 }
