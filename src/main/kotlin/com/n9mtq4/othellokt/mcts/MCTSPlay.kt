@@ -11,6 +11,25 @@ import com.n9mtq4.othellokt.abBestMove
  */
 
 /**
+ * Performs [iterations] iterations of MCTS on [state] to evaluate
+ * the current position of the board.
+ * 
+ * @param state the othello state
+ * @param iterations the number of mcts iterations
+ * @return a double of the root node's w/n
+ * */
+fun mctsEval(state: OthelloState, iterations: Int): Double {
+	
+	val root = MCTSNode(null, state, null, state.current)
+	val search = MCTS(state.current, root)
+	
+	for (i in 0 until iterations) search.mcts()
+	
+	return root.w / root.n
+	
+}
+
+/**
  * Plays an othello push gp heuristic against a MCTS.
  * 
  * @param abHeuristic the heuristic for ab
