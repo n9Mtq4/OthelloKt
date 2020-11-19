@@ -4,6 +4,7 @@ import clojure.lang.IFn
 import com.n9mtq4.othellokt.mcts.mctsPlayGame
 import kotlin.math.absoluteValue
 import kotlin.math.roundToInt
+import kotlin.streams.toList
 
 /**
  * Created by will on 11/19/20 at 4:21 PM.
@@ -56,34 +57,34 @@ private fun closestMctsToRating(rating: Double): Pair<Int, Double> {
  * @return the elo rating of the heuristic
  * */
 @JvmOverloads
-fun computeRating(heuristic: IFn, rounds: Int = 20): Int {
+fun computeRating(heuristic: IFn, rounds: Int = 2): Int {
 	
-	var elo = 1500.0
-	var score = 0.0
-	var games = 0
+	val keys = (0 until rounds).flatMap { MCTS_RATINGS.keys.toList() }
 	
-	repeat(rounds) {
+	val scores = keys.parallelStream().flatMap { mctsIters ->
 		
-		val (mctsIters, mctsElo) = closestMctsToRating(elo)
-		
-		for (player in arrayOf(-1, 1)) {
+		val mctsElo = MCTS_RATINGS[mctsIters] ?: error("Invalid key $mctsIters")
+				
+		val scores = listOf(-1, 1).map { player ->
 			
 			val finalBoard = mctsPlayGame(heuristic, player, 3, mctsIters)
 			val gameResult = player * finalBoard.winner()
 			
-			score += when (gameResult) {
+			when (gameResult) {
 				-1 -> mctsElo - 400
 				0 -> mctsElo
 				1 -> mctsElo + 400
 				else -> throw IllegalArgumentException("Invalid game result $gameResult")
 			}
-			games++
-			elo = score / elo
+//			games++
+//			elo = score / elo
 			
 		}
 		
-	}
+		scores.stream()
+		
+	}.toList()
 	
-	return elo.roundToInt()
+	return (scores.sum() / scores.size).roundToInt()
 	
 }
