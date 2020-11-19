@@ -9,7 +9,7 @@ import kotlin.math.pow
  * @author Will "n9Mtq4" Bresnahan
  */
 
-const val K: Int = 32
+const val K: Int = 2
 
 fun updateElo(black: Player, white: Player, gameResult: Int) {
 	
@@ -20,26 +20,21 @@ fun updateElo(black: Player, white: Player, gameResult: Int) {
 
 data class Player(val name: String) {
 	
+	var score: Double = 0.0
 	var elo: Double = 1500.0
 	var totalGames: Int = 0
 	
 	fun updateElo(rb: Double, gameResult: Int) {
 		
-		val ra = elo
-		
-		val expected = 10.0.pow((rb - ra) / 400.0)
-		
-		val actual = when (gameResult) {
-			-1 -> 0.0
-			0 -> 0.5
-			1 -> 1.0
+		score += when (gameResult) {
+			-1 -> rb - 400
+			0 -> rb
+			1 -> rb + 400
 			else -> throw IllegalArgumentException("Invalid game result $gameResult")
 		}
 		
-		val newRating = ra + K * (actual - expected)
-		
 		totalGames++
-		elo = newRating
+		elo = score / totalGames
 		
 	}
 	
