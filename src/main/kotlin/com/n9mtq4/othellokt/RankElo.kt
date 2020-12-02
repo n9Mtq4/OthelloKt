@@ -4,7 +4,6 @@ import clojure.lang.IFn
 import com.n9mtq4.othellokt.mcts.mctsPlayGame
 import kotlin.math.absoluteValue
 import kotlin.math.roundToInt
-import kotlin.streams.toList
 
 /**
  * Created by will on 11/19/20 at 4:21 PM.
@@ -17,18 +16,29 @@ import kotlin.streams.toList
  * with a different number of iterations.
  * */
 private val MCTS_RATINGS = mapOf(
-	200 to 1329.56757296276,
-	400 to 1389.48894810102,
-	600 to 1441.90139508945,
-	800 to 1480.82886154807,
-	1000 to 1486.26490048041,
-	1200 to 1500.35976920696,
-	1400 to 1536.26175371363,
-	1600 to 1540.01831798109,
-	1800 to 1541.62670463028,
-	2000 to 1563.45497334952,
-	2200 to 1559.06419443148,
-	2400 to 1579.46482915556
+	20 to 1012.20463383862,
+	40 to 1127.87709178272,
+	60 to 1205.27736724821,
+	80 to 1234.17603308075,
+	100 to 1292.82881041256,
+	120 to 1329.06287362451,
+	140 to 1340.83270239907,
+	160 to 1343.72336356304,
+	180 to 1360.22856273615,
+	200 to 1383.9571067387,
+	220 to 1407.64918873246,
+	240 to 1417.50449599938,
+	400 to 1450.58257608757,
+	600 to 1494.31028676273,
+	800 to 1513.66172891599,
+	1000 to 1532.63098289929,
+	1200 to 1571.37667093234,
+	1400 to 1582.29204351634,
+	1600 to 1590.61891969016,
+	1800 to 1582.90821004184,
+	2000 to 1625.53533054869,
+	2200 to 1620.59333453342,
+	2400 to 1630.09425690247,
 )
 
 /**
@@ -57,34 +67,40 @@ private fun closestMctsToRating(rating: Double): Pair<Int, Double> {
  * @return the elo rating of the heuristic
  * */
 @JvmOverloads
-fun computeRating(heuristic: IFn, rounds: Int = 2): Int {
+fun computeRating(heuristic: IFn, depth: Int = 3, rounds: Int = 200): Int {
 	
-	val keys = (0 until rounds).flatMap { MCTS_RATINGS.keys.toList() }
+	var score = 0.0
+	var games = 0
+	var elo = 1500.0
 	
-	val scores = keys.parallelStream().flatMap { mctsIters ->
+	for (i in 0 until rounds) {
 		
-		val mctsElo = MCTS_RATINGS[mctsIters] ?: error("Invalid key $mctsIters")
-				
-		val scores = listOf(-1, 1).map { player ->
-			
-			val finalBoard = mctsPlayGame(heuristic, player, 3, mctsIters)
-			val gameResult = player * finalBoard.winner()
-			
-			when (gameResult) {
-				-1 -> mctsElo - 400
-				0 -> mctsElo
-				1 -> mctsElo + 400
-				else -> throw IllegalArgumentException("Invalid game result $gameResult")
-			}
-//			games++
-//			elo = score / elo
-			
+		val (iterations, mctsElo) = closestMctsToRating(elo)
+		val blackBoard = mctsPlayGame(heuristic, 1, depth, iterations)
+		val whiteBoard = mctsPlayGame(heuristic, -1, depth, iterations)
+		
+		println("-1, $iterations, ${blackBoard.winner()}")
+		println("$iterations, -1, ${whiteBoard.winner()}")
+		
+		score += when (blackBoard.winner()) {
+			-1 -> mctsElo - 400
+			0 -> mctsElo
+			1 -> mctsElo + 400
+			else -> throw IllegalArgumentException("Invalid game result")
+		}
+		score += when (whiteBoard.winner()) {
+			1 -> mctsElo - 400
+			0 -> mctsElo
+			-1 -> mctsElo + 400
+			else -> throw IllegalArgumentException("Invalid game result")
 		}
 		
-		scores.stream()
+		games += 2
 		
-	}.toList()
+		elo = score / games
+		
+	}
 	
-	return (scores.sum() / scores.size).roundToInt()
+	return elo.roundToInt()
 	
 }
